@@ -1,0 +1,6 @@
+outs:
+- md5: e6c80fa035ab19b24c7a5e72eb33685b.dir
+  size: 10932706
+  nfiles: 2
+  hash: md5
+  path: weigths
