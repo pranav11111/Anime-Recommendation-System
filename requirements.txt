@@ -11,3 +11,4 @@ wordcloud
 joblib
 scikit-learn
 keras
+comet-ml

@@ -1,4 +1,5 @@
 import joblib
+import comet_ml
 import numpy as np
 import os
 from tensorflow.keras.callbacks import ModelCheckpoint, LearningRateScheduler, TensorBoard, EarlyStopping
@@ -13,6 +14,10 @@ logger = get_logger(__name__)
 class ModelTraining:
     def __init__(self, data_path):
         self.data_path = data_path
+        self.experiment = comet_ml.Experiment(api_key = 'JgtHTRDJxz8YJN1IiCbzXiIUN',
+                                                  project = 'Anime recommendation system',
+                                                  workspace = 'pranav11111')
+
         logger.info(" Model Training initalized")
 
     def load_data(self):
@@ -22,6 +27,7 @@ class ModelTraining:
             y_train = joblib.load(Y_TRAIN)
             y_test = joblib.load(Y_Test)
 
+            
             logger.info('Data loaded for model training')
 
             return x_train_array,x_test_array,y_train,y_test
@@ -53,6 +59,10 @@ class ModelTraining:
             joblib.dump(anime_weights,ANIME_WEIGHTS_PATH)
 
             logger.info('Model and weights saved')
+            
+            self.experiment.log_asset(MODEL_PATH)
+            self.experiment.log_asset(ANIME_WEIGHTS_PATH)
+            self.experiment.log_asset(USER_WEIGHTS_PATH)
             
 
         except Exception as e:
@@ -108,8 +118,18 @@ class ModelTraining:
                                     epochs= 20, verbose= 1, 
                                     validation_data= (x_test_array, y_test),
                                     callbacks = my_callbacks)
+                
+
                 model.load_weights(CHECKPOINT_FILE_PATH)
                 logger.info('Training done!')
+
+                for epoch in range(len(history.history['loss'])):
+                    train_loss = history.history['loss'][epoch]
+                    val_loss = history.history['val_loss'][epoch]
+                    self.experiment.log_metric('train_loss', train_loss, step = epoch)
+                    self.experiment.log_metric('val_loss', val_loss, step = epoch)
+
+
             except Exception as e:
                 raise CustomException('Training Failed', e)
             self.save_model(model)
