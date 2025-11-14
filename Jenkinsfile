@@ -32,7 +32,7 @@ pipeline{
 
         stage('DVC PULL'){
             steps{
-                withCredentials([file(credentialsId;'gcp-key'), variable = 'GOOGLE_APPLICATION_CREDENTIALS']){
+                withCredentials([file(credentialsId:'gcp-key', variable = 'GOOGLE_APPLICATION_CREDENTIALS')]){
                     script{
                         echo 'dvc pull.....'
                         sh'''
