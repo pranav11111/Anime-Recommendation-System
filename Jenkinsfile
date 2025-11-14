@@ -3,7 +3,7 @@ pipeline{
     agent any
 
     stages{
-        stage{'cloning from github'}{
+        stages{'cloning from github'}{
             steps{
                 script{
                     echo 'cloning from github'
