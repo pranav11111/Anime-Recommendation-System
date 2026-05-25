@@ -1,13 +1,14 @@
-from flask import Flask,render_template,request
+from flask import Flask, render_template, request
 from pipeline.prediction_pipeline import hybrid_recom
 
 app = Flask(__name__)
 
-@app.route('/' , methods=['GET','POST'])
+
+@app.route("/", methods=["GET", "POST"])
 def home():
     recommendations = None
 
-    if request.method == 'POST':
+    if request.method == "POST":
         try:
             user_id = int(request.form["userID"])
 
@@ -15,7 +16,8 @@ def home():
         except Exception as e:
             print("Erorr occured....")
 
-    return render_template('index.html' , recommendations=recommendations)
+    return render_template("index.html", recommendations=recommendations)
 
-if __name__=="__main__":
-    app.run(debug=True,host='0.0.0.0',port=5000)
+
+if __name__ == "__main__":
+    app.run(debug=True, host="0.0.0.0", port=5000)
